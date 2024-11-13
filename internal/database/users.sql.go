@@ -13,12 +13,14 @@ import (
 )
 
 const createUser = `-- name: CreateUser :one
-INSERT INTO users (id, created_at, updated_at, name)
-VALUES (
-    $1,
-    $2,
-    $3,
-    $4
+INSERT INTO users
+    (id, created_at, updated_at, name)
+VALUES
+    (
+        $1,
+        $2,
+        $3,
+        $4
 )
 RETURNING id, created_at, updated_at, name
 `
@@ -47,9 +49,20 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	return i, err
 }
 
+const deleteAllUsers = `-- name: DeleteAllUsers :exec
+TRUNCATE TABLE users
+`
+
+func (q *Queries) DeleteAllUsers(ctx context.Context) error {
+	_, err := q.db.ExecContext(ctx, deleteAllUsers)
+	return err
+}
+
 const getUser = `-- name: GetUser :one
-SELECT id, created_at, updated_at, name FROM users
-WHERE name = $1 LIMIT 1
+SELECT id, created_at, updated_at, name
+FROM users
+WHERE name = $1
+LIMIT 1
 `
 
 func (q *Queries) GetUser(ctx context.Context, name string) (User, error) {

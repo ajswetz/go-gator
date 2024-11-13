@@ -40,6 +40,7 @@ func main() {
 	// register available commands
 	cliCommands.register("login", handlerLogin)
 	cliCommands.register("register", handlerRegister)
+	cliCommands.register("reset", handlerReset)
 
 	cliArguments := os.Args
 
