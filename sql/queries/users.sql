@@ -21,4 +21,4 @@ SELECT *
 FROM users;
 
 -- name: DeleteAllUsers :exec
-TRUNCATE TABLE users;
+DELETE FROM users;
