@@ -45,6 +45,8 @@ func main() {
 	cliCommands.register("agg", handlerAgg)
 	cliCommands.register("addfeed", handlerAddFeed)
 	cliCommands.register("feeds", handlerGetFeeds)
+	cliCommands.register("follow", handlerFollow)
+	cliCommands.register("following", handlerFollowing)
 
 	cliArguments := os.Args
 

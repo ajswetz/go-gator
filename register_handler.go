@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"time"
@@ -44,7 +45,13 @@ func handlerRegister(s *state, cmd command) error {
 	// print message confirming user was created
 	fmt.Printf("New user '%s' was successfully created\n", username)
 	fmt.Println("User details:")
-	fmt.Printf("%+v\n", newUser)
+	jsonData, err := json.MarshalIndent(newUser, "", "  ")
+	if err != nil {
+		fmt.Printf("Error marshaling data to JSON: %v\n", err)
+		fmt.Printf("Raw user data: %+v", newUser)
+	} else {
+		fmt.Println(string(jsonData))
+	}
 
 	return nil
 }

@@ -16,22 +16,11 @@ func handlerGetFeeds(s *state, cmd command) error {
 		os.Exit(1)
 	}
 
-	// // Loop through all feeds and print to the console
-	// for _, user := range allFeeds {
-	// 	jsonData, err := json.MarshalIndent(user, "", "  ")
-	// 	if err != nil {
-	// 		fmt.Printf("Error marshaling data to JSON: %v\n", err)
-	// 		os.Exit(1)
-	// 	} else {
-	// 		fmt.Println(string(jsonData))
-	// 	}
-	// }
-
 	// Marshal feed data to JSON and print to the console
 	jsonData, err := json.MarshalIndent(allFeeds, "", "  ")
 	if err != nil {
 		fmt.Printf("Error marshaling data to JSON: %v\n", err)
-		os.Exit(1)
+		fmt.Printf("Raw feed data: %+v", allFeeds)
 	} else {
 		fmt.Println(string(jsonData))
 	}

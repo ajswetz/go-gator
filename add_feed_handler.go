@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"time"
@@ -46,7 +47,33 @@ func handlerAddFeed(s *state, cmd command) error {
 
 	// Print results to the console
 	fmt.Println("Successfully added new feed to the database")
-	fmt.Printf("%+v\n", feed)
+	jsonData, err := json.MarshalIndent(feed, "", "  ")
+	if err != nil {
+		fmt.Printf("Error marshaling data to JSON: %v\n", err)
+		fmt.Printf("Raw feed data: %+v", feed)
+	} else {
+		fmt.Println(string(jsonData))
+	}
+
+	// Create a feed-follow record for the current user and the added feed
+	// Build CreateFeedFollowParams object to pass to the CreateFeedFollow() function
+	feedFollowParams := database.CreateFeedFollowParams{
+		ID:        uuid.New(),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+		Name:      s.configuration.CurrentUserName,
+		Url:       feedURL,
+	}
+
+	// Attempt to create the feed follows record
+	feedFollowResp, err := s.db.CreateFeedFollow(context.Background(), feedFollowParams)
+	if err != nil {
+		fmt.Println("An error occurred when attempting to create a new feed follow record")
+		fmt.Printf("Error: %v\n", err)
+	}
+
+	// Print results to the console
+	fmt.Printf("%s is now following feed '%s'\n", feedFollowResp.UserName, feedFollowResp.FeedName)
 
 	return nil
 }
