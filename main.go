@@ -43,10 +43,12 @@ func main() {
 	cliCommands.register("reset", handlerReset)
 	cliCommands.register("users", handlerUsers)
 	cliCommands.register("agg", handlerAgg)
-	cliCommands.register("addfeed", handlerAddFeed)
 	cliCommands.register("feeds", handlerGetFeeds)
-	cliCommands.register("follow", handlerFollow)
-	cliCommands.register("following", handlerFollowing)
+
+	// register available commands that utilize middlewareLoggedIn
+	cliCommands.register("addfeed", middlewareLoggedIn(handlerAddFeed))
+	cliCommands.register("follow", middlewareLoggedIn(handlerFollow))
+	cliCommands.register("following", middlewareLoggedIn(handlerFollowing))
 
 	cliArguments := os.Args
 

@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func handlerAddFeed(s *state, cmd command) error {
+func handlerAddFeed(s *state, cmd command, user database.User) error {
 	// Check to see if `name` and `url` arguments were passed to the command
 	if len(cmd.arguments) != 2 {
 		fmt.Println("addfeed expects exactly two arguments: the 'name' and 'url' of the feed")
@@ -21,13 +21,6 @@ func handlerAddFeed(s *state, cmd command) error {
 	feedName := cmd.arguments[0]
 	feedURL := cmd.arguments[1]
 
-	// Get current user details from the database
-	currentUser, err := s.db.GetUser(context.Background(), s.configuration.CurrentUserName)
-	if err != nil {
-		fmt.Printf("Unable to get user '%s' from the database: %v\n", s.configuration.CurrentUserName, err)
-		os.Exit(1)
-	}
-
 	// Build database.CreateFeedParams object
 	newFeedParams := database.CreateFeedParams{
 		ID:        uuid.New(),
@@ -35,7 +28,7 @@ func handlerAddFeed(s *state, cmd command) error {
 		UpdatedAt: time.Now(),
 		Name:      feedName,
 		Url:       feedURL,
-		UserID:    currentUser.ID,
+		UserID:    user.ID,
 	}
 
 	feed, err := s.db.CreateFeed(context.Background(), newFeedParams)
@@ -61,7 +54,7 @@ func handlerAddFeed(s *state, cmd command) error {
 		ID:        uuid.New(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
-		Name:      s.configuration.CurrentUserName,
+		Name:      user.Name,
 		Url:       feedURL,
 	}
 

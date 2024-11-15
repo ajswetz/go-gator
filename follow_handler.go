@@ -10,7 +10,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func handlerFollow(s *state, cmd command) error {
+func handlerFollow(s *state, cmd command, user database.User) error {
 
 	// Check to see if a `url` argument was passed to the command
 	if len(cmd.arguments) != 1 {
@@ -26,7 +26,7 @@ func handlerFollow(s *state, cmd command) error {
 		ID:        uuid.New(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
-		Name:      s.configuration.CurrentUserName,
+		Name:      user.Name,
 		Url:       feedURL,
 	}
 
