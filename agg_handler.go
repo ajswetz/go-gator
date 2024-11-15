@@ -1,24 +1,33 @@
 package main
 
 import (
-	"context"
 	"fmt"
+	"os"
+	"time"
 )
 
 func handlerAgg(s *state, c command) error {
 
-	// Add an agg command. Later this will be our long-running aggregator service.
-	// For now, we'll just use it to fetch a single feed and ensure our parsing works.
-	// It should fetch the feed found at https://www.wagslane.dev/index.xml and print the entire struct to the console.
+	// Check to see if a `time_between_reqs` argument was passed to the command
+	if len(c.arguments) != 1 {
+		fmt.Println("agg handler expects exactly one argument: a time_between_reqs duration string")
+		os.Exit(1)
+	}
 
-	const feedURL = "https://www.wagslane.dev/index.xml"
-
-	fetchedFeed, err := fetchFeed(context.Background(), feedURL)
+	// Convert time_between_requests string argument to time.Duration value
+	time_btw_reqs_str := c.arguments[0]
+	timeBetweenRequests, err := time.ParseDuration(time_btw_reqs_str)
 	if err != nil {
-		return err
-	} else {
-		fmt.Println("Feed fetched:")
-		fmt.Printf("%+v", fetchedFeed)
+		fmt.Printf("Unable to convert '%s' to time.Duration value\n", time_btw_reqs_str)
+	}
+
+	// Start scraping feeds on infinite loop once every `time_between_requests`
+	fmt.Printf("Collecting feeds every %v...\n", timeBetweenRequests)
+	ticker := time.NewTicker(timeBetweenRequests)
+	for ; ; <-ticker.C {
+		fmt.Println("Running scrapeFeeds()...")
+		scrapeFeeds(s)
+		fmt.Println()
 	}
 
 	return nil
