@@ -305,12 +305,99 @@ john has successfully unfollowed feed 'https://techcrunch.com/feed/'
 ```
 
 ### following
+The `following` command takes no arguments and returns a list of all RSS feeds currently followed by the logged in user.
 
+Example:
+```
+go-gator following
+```
+```
+john is currently following these feeds:
+ - Tech Crunch
+ - JetBrains Go Blog
+ ```
 
 ### agg
+The `agg` command takes one parameter, a stringified duration value (e.g.: 1s, 3m, 2h). The `agg` command is a never-ending loop that fetches feeds and saves posts to the database. The intended use case is to leave the agg command running in the background while you interact with the program in another terminal. The `agg` command will attempt to fetch new feeds once every `time.Duration` passed in as the parameter with the initial command. You can kill the `agg` loop with Ctrl+C.
 
+Example:
+```
+go-gator agg 30s
+```
+```
+Collecting feeds every 30s...
+Running scrapeFeeds()...
+```
 
 ### browse
+The `browse` command takes no mandatory parameters and returns a list of recent posts stored in the database associated with the feeds followed by the logged in user. By default, the `browse` command returns the most recent two posts.
 
+The `browse` command can take one option parameter, a 'limit' that will adjust the number of posts returned.
+
+Example:
+```
+go-gator browse
+```
+```
+Here are your most recent posts:
+
+Title: ‘I went to Greenland to try to buy it’: Meet the founder who wants to recreate Mars on Earth
+Description: <p>Praxis co-founder Dryden Brown wants to build a city in Greenland that emulates what a community on Mars could be like.</p>
+<p>© 2024 TechCrunch. All rights reserved. For personal use only.</p>
+
+Publication Date: 2024-11-15 19:01:40
+Link: https://techcrunch.com/2024/11/15/i-went-to-greenland-to-try-to-buy-it-meet-the-founder-who-wants-to-re-create-mars-on-earth/
+--------------------------------------------------------------------------------
+
+Title: Think you need a VPN? Start here.
+Description: <p>Not everyone actually needs to use a VPN. This simple guide will help you decide if you need a VPN for your situation. </p>
+<p>© 2024 TechCrunch. All rights reserved. For personal use only.</p>
+
+Publication Date: 2024-11-15 19:00:00
+Link: https://techcrunch.com/2024/11/15/think-you-need-a-vpn-guide-start-here/
+--------------------------------------------------------------------------------
+```
+
+```
+go-gator browse 3
+```
+```
+Here are your most recent posts:
+
+Title: ‘I went to Greenland to try to buy it’: Meet the founder who wants to recreate Mars on Earth
+Description: <p>Praxis co-founder Dryden Brown wants to build a city in Greenland that emulates what a community on Mars could be like.</p>
+<p>© 2024 TechCrunch. All rights reserved. For personal use only.</p>
+
+Publication Date: 2024-11-15 19:01:40
+Link: https://techcrunch.com/2024/11/15/i-went-to-greenland-to-try-to-buy-it-meet-the-founder-who-wants-to-re-create-mars-on-earth/
+--------------------------------------------------------------------------------
+
+Title: Think you need a VPN? Start here.
+Description: <p>Not everyone actually needs to use a VPN. This simple guide will help you decide if you need a VPN for your situation. </p>
+<p>© 2024 TechCrunch. All rights reserved. For personal use only.</p>
+
+Publication Date: 2024-11-15 19:00:00
+Link: https://techcrunch.com/2024/11/15/think-you-need-a-vpn-guide-start-here/
+--------------------------------------------------------------------------------
+
+Title: This ‘AI Granny’ hack wastes telephone scammers’ time with boring chit-chat
+Description: <p>Telephone scams are nothing new, but with the advent of AI, it has become harder than ever for people to know whether the person they’re speaking to is in fact who they say they are. But U.K. mobile network O2 is turning the tables, creating what it calls an “AI granny” to keep scammers on […]</p>
+<p>© 2024 TechCrunch. All rights reserved. For personal use only.</p>
+
+Publication Date: 2024-11-15 18:11:21
+Link: https://techcrunch.com/2024/11/15/ai-granny-scambaiter-wastes-telephone-fraudsters-time-with-boring-chat/
+--------------------------------------------------------------------------------
+```
 
 ### reset
+**CAUTION: DANGER ZONE**
+
+The `reset` command will delete all data stored in the database, including users, feeds, user-feed follows, and posts. It is primarily meant as a development convenience. Only run the `reset` command if you want to clear the database and start from scratch.
+
+Example:
+```
+go-gator reset
+```
+```
+All users successfully deleted from the database
+```
